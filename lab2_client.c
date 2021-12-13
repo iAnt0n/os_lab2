@@ -104,6 +104,10 @@ static int print_help()
 
 int main(int argc, char * argv[])
 {
+    if (argc < 2 || argc > 4) {
+        return print_help();
+    }
+
     bool print_vfsmount = false;
     bool print_address_space = false;
     char * path = NULL;
@@ -128,24 +132,11 @@ int main(int argc, char * argv[])
         print_vfsmount = true;
     }
 
-    int fd = fopen("/dev/" DEVICE_FILE_NAME, O_RDONLY);
+    int fd = open("/dev/" DEVICE_FILE_NAME, O_RDONLY);
 
     if (fd == -1) {
         printf("Cannot open /dev/" DEVICE_FILE_NAME " device, please check your permissions");
         return -1;
-    }
-
-    if (print_vfsmount) {
-        char buf[BUF_LEN];
-        strcpy(buf, path);
-
-        if (ioctl(fd, IOCTL_GET_VFSMOUNT, buf) != 0) {
-            printf("Cannot get struct vfsmount for path %s\n", path);
-            return -1;
-        }
-
-        struct lab2_vfsmount * vfsmount = (struct lab2_vfsmount *) buf;
-        lab2_vfsmount_print(vfsmount);
     }
 
     if (print_address_space) {
@@ -159,6 +150,19 @@ int main(int argc, char * argv[])
 
         struct lab2_address_space * as = (struct lab2_address_space *) buf;
         lab2_address_space_print(as);
+    }
+
+    if (print_vfsmount) {
+        char buf[BUF_LEN];
+        strcpy(buf, path);
+
+        if (ioctl(fd, IOCTL_GET_VFSMOUNT, buf) != 0) {
+            printf("Cannot get struct vfsmount for path %s\n", path);
+            return -1;
+        }
+
+        struct lab2_vfsmount * vfsmount = (struct lab2_vfsmount *) buf;
+        lab2_vfsmount_print(vfsmount);
     }
 
     return 0;

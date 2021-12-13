@@ -112,15 +112,6 @@ static int __init lab2_init(void)
     device_create(cls, NULL, MKDEV(MAJOR_NUM, 0), NULL, DEVICE_FILE_NAME); 
  
     pr_info("Device created on /dev/%s\n", DEVICE_FILE_NAME); 
-
-    // struct path path;
-
-    // kern_path("/home/anton/Downloads/7a348f", LOOKUP_FOLLOW, &path);
-    // kern_path("/home/anton/os", LOOKUP_FOLLOW, &path);
-
-    // pr_info("ADDRESS SPACE NRPAGES: %d\n", path.dentry->d_inode->i_mapping->nrpages);
-    // pr_info("MIGHT MAPPED?: %d\n", mapping_mapped(path.dentry->d_inode->i_mapping));
-    // pr_info("VFS MOUNT: %d", path.mnt);
     
     return 0;
 }
